@@ -1,0 +1,44 @@
+<% layout('layouts/boilerplate')%>
+
+    <h1 class="display-4">Transactions</h1>
+    <table class="table table-bordered table-hover" id="transactionTable">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">AccountId</th>
+                <th scope="col">Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Company</th>
+                <th scope="col">Description</th>
+                <th scope="col">Amount</th>
+                <th scope="col">ClearingDate</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <% for(let t of transactions) {%>
+            <tr>
+                <td>
+                    <%=t.accountId%>
+                </td>
+                <td>
+                    <%=`${helpers.parseDate(t.date)}`%>
+                </td>
+                <td>
+                    <%=t.category%>
+                </td>
+                <td>
+                    <%=t.company%>
+                </td>
+                <td>
+                    <%=t.description%>
+                </td>
+                <td>
+                    <%=`${t.amount}`%>
+                </td>
+                <td>
+                    <%=`${helpers.parseDate(t.clearingDate)}`%>
+                </td>
+                <td><a href="/transactions/<%= t.id %>/edit">edit</a></td>
+            </tr>
+            <% }%>
+    </table>
+    <a href="/transactions/new" class="btn btn-primary">New transaction</a>

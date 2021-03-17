@@ -1,0 +1,11 @@
+table {
+    max-width: 80%;
+}
+
+form {
+    max-width: 40%;
+}
+
+.form-border {
+    border: 1px solid lightgray;
+}
