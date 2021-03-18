@@ -1,26 +1,10 @@
-function getYear(date) {
-    return 1900 + date.getYear();
-}
-
-function getMonth(date) {
-    let month = date.getMonth() + 1;
-    month = "0" + month.toString();
-    return month.slice(-2);
-}
-
-function getDay(date) {
-    let day = date.getDate() + 1;
-    day = "0" + day.toString();
-    return day.slice(-2);
-}
-
 function parseDate(date) {
-    if (date === null || date === undefined || isNaN(date)) {
+    if (date === null || date === '' || date === undefined || isNaN(date)) {
         return '';
     } else {
-        const year = getYear(date);
-        const month = getMonth(date);
-        const day = getDay(date);
+        const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'UTC' }).format(date);
+        const month = new Intl.DateTimeFormat('en', { month: '2-digit', timeZone: 'UTC' }).format(date);
+        const day = new Intl.DateTimeFormat('en', { day: '2-digit', timeZone: 'UTC' }).format(date);
         return `${year}-${month}-${day}`;
     }
 }
@@ -30,6 +14,17 @@ function addDays(date, days) {
     result.setDate(result.getDate() + days);
     return result;
 }
+
+Date.prototype.minusMonths = function(n) {
+    this.setMonth(this.getMonth() - n);
+    return this;
+}
+
+Date.prototype.firstOfMonth = function() {
+    this.setDate(1);
+    return this;
+}
+
 
 exports.parseDate = parseDate;
 exports.addDays = addDays;

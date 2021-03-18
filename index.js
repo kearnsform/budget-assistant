@@ -10,6 +10,7 @@ const Transaction = require('./models/transaction');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const { transactionSchema } = require('./schemas.js');
+const transactionDao = require('./db/TransactionDao');
 
 //To parse form data in POST request body:
 app.use(express.urlencoded({ extended: true }))
@@ -49,9 +50,24 @@ app.get('/reports', (req, res) => {
     res.render('reports/index', {})
 })
 
+function getFilter(req) {
+    let filter = req.query.filter;
+    if (!filter) {
+        filter = { accountId: 1, startDate: new Date().minusMonths(1).firstOfMonth() }; //default filter
+    }
+    if (filter.startDate) {
+        filter.startDate = new Date(filter.startDate);
+    }
+    if (filter.endDate) {
+        filter.endDate = new Date(filter.endDate);
+    }
+    return filter;
+}
+
 app.get('/transactions', catchAsync(async(req, res) => {
-    const transactions = await Transaction.find({});
-    res.render('transactions/index', { helpers: functions, transactions: transactions });
+    const filter = getFilter(req);
+    const transactions = await transactionDao.getTransactions(filter);
+    res.render('transactions/index', { helpers: functions, transactions: transactions, filter: filter, categories });
 }))
 
 app.get('/transactions/new', (req, res) => {

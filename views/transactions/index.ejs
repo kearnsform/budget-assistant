@@ -1,6 +1,56 @@
 <% layout('layouts/boilerplate')%>
 
     <h1 class="display-4">Transactions</h1>
+    <div class="container ml-0 pl-0">
+        <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#filter">Filter</button>
+        <div id="filter" class="collapse">
+            <form action="/transactions" method="GET" class="form-border">
+                <div class="form-group row">
+                    <label for="accountId" class="col-sm-3 col-form-label">AccountId:</label>
+                    <div class="col-sm-5">
+                        <input type="number" class="form-control" id="accountId" name="filter[accountId]" value="<%=filter.accountId%>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="startDate" class="col-sm-3 col-form-label">Start Date:</label>
+                    <div class="col-sm-5">
+                        <input type="date" class="form-control" id="startDate" name="filter[startDate]" value="<%=`${helpers.parseDate(filter.startDate)}`%>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="endDate" class="col-sm-3 col-form-label">End Date:</label>
+                    <div class="col-sm-5">
+                        <input type="date" class="form-control" id="endDate" name="filter[endDate]" value="<%=`${helpers.parseDate(filter.endDate)}`%>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="categories" class="col-sm-3 col-form-label">Categories:</label>
+                    <div class="col-sm-5">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle col-sm-10" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <% for(let category of categories){ %>
+                                    <div class="form-check dropdown-item" href="#">
+                                        <input class="form-check-input" type="checkbox" id="flexCheck<%=category%>" value="<%=category%>" name="filter[categories]" <%=(filter.categories && filter.categories.includes(category)) ? 'checked' : ''%>>
+                                        <label class="form-check-label" for="flexCheck<%=category%>">
+                                    <%=category%>
+                                    </label>
+                                    </div>
+                                    <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-3 col-form-label">Description:</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" id="description" name="filter[description]" value="<%=filter.description%>">
+                    </div>
+                </div>
+                <button class="btn btn-success">Apply</button>
+            </form>
+        </div>
+    </div><br>
     <table class="table table-bordered table-hover" id="transactionTable">
         <thead class="thead-dark">
             <tr>
