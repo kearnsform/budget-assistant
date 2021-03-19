@@ -11,6 +11,9 @@ const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const { transactionSchema } = require('./schemas.js');
 const transactionDao = require('./db/TransactionDao');
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
 
 //To parse form data in POST request body:
 app.use(express.urlencoded({ extended: true }))
@@ -53,9 +56,12 @@ app.get('/reports', (req, res) => {
 function getFilter(req) {
     let filter = req.query.filter;
     if (!filter) {
+        filter = req.cookies.filter;
+    }
+    if (!filter) {
         filter = { accountId: 1, startDate: new Date().minusMonths(1).firstOfMonth() }; //default filter
     }
-    if (filter.startDate) {
+    if (filter.startDate) { //query parameters and cookies parse as strings
         filter.startDate = new Date(filter.startDate);
     }
     if (filter.endDate) {
@@ -66,6 +72,8 @@ function getFilter(req) {
 
 app.get('/transactions', catchAsync(async(req, res) => {
     const filter = getFilter(req);
+    const expiration = new Date(Date.now() + (60 * 60 * 1000)); // filter expires after 1 hour
+    res.cookie('filter', filter, { expires: expiration, httpOnly: true });
     const transactions = await transactionDao.getTransactions(filter);
     res.render('transactions/index', { helpers: functions, transactions: transactions, filter: filter, categories });
 }))
