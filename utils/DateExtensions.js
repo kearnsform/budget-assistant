@@ -1,0 +1,52 @@
+Date.prototype.minusMonths = function(n) {
+    this.setMonth(this.getMonth() - n);
+    return this;
+}
+
+Date.prototype.minusYears = function(n) {
+    this.setYear(this.getYear() - n);
+    return this;
+}
+
+Date.prototype.firstOfMonth = function() {
+    this.setDate(1);
+    return this;
+}
+
+Date.prototype.firstOfYear = function() {
+    this.setMonth(1);
+    this.setDate(1);
+    return this;
+}
+
+Date.prototype.lastOfYear = function() {
+    this.setMonth(12);
+    this.setDate(31);
+    return this;
+}
+
+Date.prototype.lastOfMonth = function() {
+    const month = this.getMonth() + 1;
+    const year = this.getYear() + 1900;
+    const isLeapYear = ((year % 4 === 0) && !((year % 100 === 0) && !(year % 400 === 0)));
+    let date = 31;
+    switch (month) {
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            date = 30;
+            break;
+        case 2:
+            if (isLeapYear) {
+                date = 29;
+            } else {
+                date = 28;
+            }
+            break;
+        default:
+            //nothing
+    }
+    this.setDate(date);
+    return this;
+}

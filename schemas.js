@@ -5,8 +5,8 @@ module.exports.transactionSchema = Joi.object({
         accountId: Joi.number().integer().required(),
         date: Joi.date().required(),
         category: Joi.string().required(),
-        company: Joi.string(),
-        description: Joi.string(),
+        company: Joi.string().optional().allow(''),
+        description: Joi.string().optional().allow(''),
         amount: Joi.number().precision(2).required(),
         clearingDate: Joi.date().allow("")
     }).required()

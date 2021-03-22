@@ -1,3 +1,13 @@
+function capitalizeFirst(str) {
+    if (str === undefined || str.length < 1) {
+        return str;
+    }
+    if (str.length < 2) {
+        return str.charAt(0).toUpperCase();
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 function parseDate(date) {
     if (date === null || date === '' || date === undefined || isNaN(date)) {
         return '';
@@ -9,22 +19,5 @@ function parseDate(date) {
     }
 }
 
-function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-}
-
-Date.prototype.minusMonths = function(n) {
-    this.setMonth(this.getMonth() - n);
-    return this;
-}
-
-Date.prototype.firstOfMonth = function() {
-    this.setDate(1);
-    return this;
-}
-
-
 exports.parseDate = parseDate;
-exports.addDays = addDays;
+exports.capitalizeFirst = capitalizeFirst;

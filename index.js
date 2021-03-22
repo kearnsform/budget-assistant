@@ -11,6 +11,7 @@ const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const { transactionSchema } = require('./schemas.js');
 const transactionDao = require('./db/TransactionDao');
+const TransactionFilter = require('./db/TransactionFilter');
 const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
@@ -49,33 +50,23 @@ mongoose.connect('mongodb://localhost:27017/budgetData', { useNewUrlParser: true
 
 const categories = ['Groceries & Supplies', 'Travel', 'Home', 'Auto'];
 
-app.get('/reports', (req, res) => {
-    res.render('reports/index', {})
+app.get('/reports', async(req, res) => {
+    const groupingColumn = req.query.groupingColumn;
+    let groupings = [];
+    if (groupingColumn) {
+        const transactions = await transactionDao.getTransactions(new TransactionFilter(req));
+        groupings = transactions.groupBy(groupingColumn);
+        groupings.push({ key: 'Total', amount: transactions.total() });
+    }
+    res.render('reports/index', { groupings, reportName: req.query.reportName, groupingColumn: functions.capitalizeFirst(groupingColumn) });
 })
 
-function getFilter(req) {
-    let filter = req.query.filter;
-    if (!filter) {
-        filter = req.cookies.filter;
-    }
-    if (!filter) {
-        filter = { accountId: 1, startDate: new Date().minusMonths(1).firstOfMonth() }; //default filter
-    }
-    if (filter.startDate) { //query parameters and cookies parse as strings
-        filter.startDate = new Date(filter.startDate);
-    }
-    if (filter.endDate) {
-        filter.endDate = new Date(filter.endDate);
-    }
-    return filter;
-}
-
 app.get('/transactions', catchAsync(async(req, res) => {
-    const filter = getFilter(req);
+    const filter = new TransactionFilter(req);
     const expiration = new Date(Date.now() + (60 * 60 * 1000)); // filter expires after 1 hour
     res.cookie('filter', filter, { expires: expiration, httpOnly: true });
     const transactions = await transactionDao.getTransactions(filter);
-    res.render('transactions/index', { helpers: functions, transactions: transactions, filter: filter, categories });
+    res.render('transactions/index', { helpers: functions, transactions: transactions.get(), filter: filter, categories });
 }))
 
 app.get('/transactions/new', (req, res) => {

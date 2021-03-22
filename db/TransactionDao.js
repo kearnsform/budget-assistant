@@ -1,4 +1,5 @@
 const Transaction = require('../models/transaction');
+const TransactionArray = require('../db/TransactionArray');
 
 async function getTransactions(filter) {
     const mongoFilter = {};
@@ -20,7 +21,7 @@ async function getTransactions(filter) {
     }
 
     const transactions = await Transaction.find(mongoFilter);
-    return transactions;
+    return new TransactionArray(transactions);
 }
 
 exports.getTransactions = getTransactions;
