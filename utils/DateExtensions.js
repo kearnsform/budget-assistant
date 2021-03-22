@@ -4,7 +4,7 @@ Date.prototype.minusMonths = function(n) {
 }
 
 Date.prototype.minusYears = function(n) {
-    this.setYear(this.getYear() - n);
+    this.setYear(1900 + this.getYear() - n);
     return this;
 }
 
