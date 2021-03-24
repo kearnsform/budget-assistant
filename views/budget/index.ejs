@@ -1,0 +1,68 @@
+<% layout('layouts/boilerplate')%>
+
+    <h1 class="display-4">Budget</h1>
+    <br>
+    <table class="table table-sm table-small table-bordered table-hover" id="budgetTable">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Category</th>
+                <th scope="col">Amount</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% budget.income.forEach((item, index) => { %>
+                <tr>
+                    <% if (index === 0) { %>
+                        <td rowspan="<%=budget.income.length %>">Income</td>
+                        <% }  %>
+                            <td>
+                                <%=item.category %>
+                            </td>
+                            <td>
+                                <%=item.amount %>
+                            </td>
+                            <td>
+                                <a href="/budget/<%= item.id %>/edit"><i class="bi bi-pencil-square"></i></a>
+                            </td>
+                </tr>
+                <% }); %>
+        </tbody>
+        <tbody class="expense">
+            <% budget.expenses.forEach((item, index) => { %>
+                <tr>
+                    <% if (index === 0) { %>
+                        <td rowspan="<%=budget.expenses.length %>">Expenses</td>
+                        <% }  %>
+                            <td>
+                                <%=item.category %>
+                            </td>
+                            <td>
+                                <%=item.amount %>
+                            </td>
+                            <td>
+                                <a href="/budget/<%= item.id %>/edit"><i class="bi bi-pencil-square"></i></a>
+                            </td>
+                </tr>
+                <% }); %>
+        </tbody>
+        <tbody>
+            <tr class="bold-row  table-secondary">
+                <td>Surplus (Deficit)</td>
+                <td></td>
+                <% if (budget.total < 0 ) { %>
+                    <td class="expense">
+                        <%='(' + Math.abs(budget.total) + ')' %>
+                    </td>
+                    <% } else  { %>
+                        <td>
+                            <%=budget.total %>
+                        </td>
+                        <% } %>
+                            <td></td>
+            </tr>
+        </tbody>
+
+    </table>
+    <a href="/budget/new" class="btn btn-primary">New Entry</a>

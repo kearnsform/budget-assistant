@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 
 const transactionsRoutes = require('./routes/transactionsRoutes');
 const reportsRoutes = require('./routes/reportsRoutes');
+const budgetRoutes = require('./routes/budgetRoutes');
 
 app.use(cookieParser());
 
@@ -35,6 +36,7 @@ mongoose.connect('mongodb://localhost:27017/budgetData', { useNewUrlParser: true
 
 app.use('/transactions', transactionsRoutes);
 app.use('/reports', reportsRoutes);
+app.use('/budget', budgetRoutes);
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))

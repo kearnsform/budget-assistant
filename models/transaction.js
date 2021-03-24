@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const budgetDao = require('../db/BudgetDao');
 
 const transactionSchema = new mongoose.Schema({
     accountId: {
@@ -11,8 +12,13 @@ const transactionSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['Groceries & Supplies', 'Travel', 'Home', 'Auto'],
-        required: true
+        required: true,
+        validate: {
+            validator: async function(value) {
+                return (await budgetDao.getCategories()).includes(value);
+            },
+            message: props => `${props.value} is not valid`
+        }
     },
     company: {
         type: String

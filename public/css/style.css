@@ -17,3 +17,7 @@ form {
 .bold-row {
     font-weight: bold;
 }
+
+.expense {
+    color: rgb(190, 0, 0);
+}

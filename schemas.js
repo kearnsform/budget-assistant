@@ -11,3 +11,11 @@ module.exports.transactionSchema = Joi.object({
         clearingDate: Joi.date().allow("")
     }).required()
 });
+
+module.exports.budgetItemSchema = Joi.object({
+    budgetItem: Joi.object({
+        type: Joi.string().required(),
+        category: Joi.string().required(),
+        amount: Joi.number().required()
+    }).required()
+});

@@ -7,6 +7,7 @@ const ExpressError = require('../utils/ExpressError');
 const { transactionSchema } = require('./../schemas.js');
 const transactionDao = require('../db/TransactionDao');
 const TransactionFilter = require('../db/TransactionFilter');
+const budgetDao = require('../db/BudgetDao');
 
 const validateTransaction = (req, res, next) => {
     const { error } = transactionSchema.validate(req.body);
@@ -18,19 +19,19 @@ const validateTransaction = (req, res, next) => {
     }
 }
 
-const categories = ['Groceries & Supplies', 'Travel', 'Home', 'Auto'];
-
 router.get('/', catchAsync(async(req, res) => {
     const filter = new TransactionFilter(req);
     const expiration = new Date(Date.now() + (60 * 60 * 1000)); // filter expires after 1 hour
     res.cookie('filter', filter, { expires: expiration, httpOnly: true });
     const transactions = await transactionDao.getTransactions(filter);
+    const categories = await budgetDao.getCategories();
     res.render('transactions/index', { helpers: functions, transactions: transactions.get(), filter: filter, categories });
 }))
 
-router.get('/new', (req, res) => {
+router.get('/new', catchAsync(async(req, res) => {
+    const categories = await budgetDao.getCategories();
     res.render('transactions/new', { categories });
-})
+}))
 
 router.post('/', validateTransaction, catchAsync(async(req, res) => {
     const newTransaction = new Transaction(req.body.transaction);
@@ -41,6 +42,7 @@ router.post('/', validateTransaction, catchAsync(async(req, res) => {
 router.get('/:id/edit', catchAsync(async(req, res) => {
     const { id } = req.params;
     const transaction = await Transaction.findById(id);
+    const categories = await budgetDao.getCategories();
     res.render('transactions/edit', { helpers: functions, transaction, categories });
 }))
 

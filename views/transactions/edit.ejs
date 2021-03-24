@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate')%>
 
-    <h1 class="display-4">Edit</h1>
+    <h1 class="display-4">Edit Transaction</h1>
     <form class="form-border validated-form" method="POST" action="/transactions/<%=transaction.id%>?_method=PATCH" novalidate>
         <div class="form-group row">
             <label for="accountId" class="col-sm-3 col-form-label">AccountId:</label>
@@ -13,8 +13,6 @@
             <div class="col-sm-5">
                 <input type="date" class="form-control" id="date" name="transaction[date]" value="<%=helpers.parseDate(transaction.date) %>" required>
             </div>
-        </div>
-
         </div>
         <div class="form-group row">
             <label for="category" class="col-sm-3 col-form-label">Category:</label>
@@ -58,4 +56,4 @@
         <button class="btn btn-danger">Delete</button>
     </form>
     <br>
-    <a href="/transactions">Back to Main</a>
+    <a href="/transactions">Go Back</a>
