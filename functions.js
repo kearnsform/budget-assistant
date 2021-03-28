@@ -19,5 +19,10 @@ function parseDate(date) {
     }
 }
 
+function round(result) {
+    return Math.round(result * 100) / 100
+}
+
 exports.parseDate = parseDate;
 exports.capitalizeFirst = capitalizeFirst;
+exports.round = round;

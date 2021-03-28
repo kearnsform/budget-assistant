@@ -1,0 +1,25 @@
+<% for(let entry of entries) {%>
+    <tr>
+        <td>
+            <%=entry.key%>
+        </td>
+        <td <%=entry.alert ? 'class=alert' : '' %>>
+            <%  if (entry.type !== 'expense' && entry.amount < 0) {%>
+                <%= '(' + Math.abs(entry.amount) + ')'%>
+                    <% } else { %>
+                        <%= Math.abs(entry.amount) %>
+                            <% } %>
+        </td>
+        <% if (includeBudget) { %>
+            <td>
+                <% if (entry.budgetAmount) { %>
+                    <%  if (entry.type !== 'expense' && entry.budgetAmount < 0) {%>
+                        <%= '(' + Math.abs(entry.budgetAmount) + ')' %>
+                            <% } else { %>
+                                <%=Math.abs(entry.budgetAmount) %>
+                                    <% } %>
+                                        <% } %>
+            </td>
+            <% } %>
+    </tr>
+    <% } %>

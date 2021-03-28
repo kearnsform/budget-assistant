@@ -14,10 +14,16 @@ form {
     border: 1px solid lightgray;
 }
 
-.bold-row {
+.bold-row,
+.bold-row tr {
     font-weight: bold;
+    border: 2px solid black;
 }
 
 .expense {
     color: rgb(190, 0, 0);
+}
+
+.alert {
+    background-color: rgb(255, 215, 220);
 }

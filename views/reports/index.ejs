@@ -1,40 +1,49 @@
 <% layout('layouts/boilerplate')%>
 
     <h1 class="display-4">Reports</h1>
-    <a href="/reports?reportName=Totals%20By%20Category%20-%20Current%20Month&groupingColumn=category&filter[periodCode]=M&filter[periodStartValue]=0&filter[periodEndValue]=0" method="GET">Totals By Category - Current Month</a>
+    <a href="/reports?reportName=Totals%20By%20Category%20-%20Current%20Month&groupingColumn=category&filter[periodCode]=M&filter[periodStartValue]=0&filter[periodEndValue]=0&includeTotal=true&includeBudget=true&alert=true" method="GET">Totals By Category - Current Month</a>
     <br>
-    <a href="/reports?reportName=Totals%20By%20Category%20-%20Previous%20Month&groupingColumn=category&filter[periodCode]=M&filter[periodStartValue]=1&filter[periodEndValue]=1" method="GET">Totals By Category - Previous Month</a>
+    <a href="/reports?reportName=Totals%20By%20Category%20-%20Previous%20Month&groupingColumn=category&filter[periodCode]=M&filter[periodStartValue]=1&filter[periodEndValue]=1&includeTotal=false" method="GET">Totals By Category - Previous Month</a>
     <br>
-    <a href="/reports?reportName=Discretionary%20Spending%20This%20Year&groupingColumn=category&filter[periodCode]=Y&filter[periodStartValue]=0&filter[periodEndValue]=0&filter[categories]=Travel&filter[categories]=Home" method="GET">Discretionary Spending This Year</a>
+    <a href="/reports?reportName=Discretionary%20Spending%20This%20Year&groupingColumn=category&filter[periodCode]=Y&filter[periodStartValue]=0&filter[periodEndValue]=0&filter[categories]=Travel&filter[categories]=Home&includeTotal=true&includeBudget=true&alert=true"
+        method="GET">Discretionary Spending This Year</a>
     <br>
-    <a href="/reports?reportName=Account%20Balances&groupingColumn=accountId&filter[accountId]=1" method="GET">Account Balances</a>
+    <a href="/reports?reportName=Account%20Balances&groupingColumn=accountId&filter[accountId]=1&includeTotal=true" method="GET">Account Balances</a>
     <br><br>
     <% if (reportName) { %>
         <h4 class="display-6">
             <%=reportName %>
         </h4>
-        <table class="table table-sm table-small table-bordered table-hover" id="groupingTotalsTable">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">
-                        <%=groupingColumn %>
-                    </th>
-                    <th scope="col">Amount</th>
-                </tr>
-            </thead>
-            <% for(let t of groupings) {%>
-                <%  if (t.key === 'Total') {%>
-                    <tr class="bold-row table-secondary">
-                        <% } else {%>
-                            <tr ">
-                        <% } %>
-                    <td>
-                        <%=t.key%>
-                    </td>
-                    <td>
-                        <%=`${t.amount}`%>
-                    </td>
-                </tr>
-                <% }%>
-        </table>
-        <% } %>
+        <% const includeBudget = reportEntries.entries.reduce((acc, e) => { return acc || e.budgetAmount; }, false) %>
+            <table class="table table-sm table-small table-bordered table-hover" id="groupingTotalsTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">
+                            <%=groupingColumn %>
+                        </th>
+                        <th scope="col">Amount</th>
+                        <% if (includeBudget) { %>
+                            <th scope="col">Budgeted</th>
+                            <% } %>
+                    </tr>
+                </thead>
+                <% const incomeEntries = reportEntries.entries.filter(entry => entry.type && entry.type === 'income'); %>
+                    <tbody>
+                        <%- include('./reportRowPartial', {entries: incomeEntries, includeBudget}); %>
+                    </tbody>
+                    <% const expenseEntries = reportEntries.entries.filter(entry => entry.type && entry.type === 'expense'); %>
+                        <tbody class="expense">
+                            <%- include('./reportRowPartial', {entries: expenseEntries, includeBudget}); %>
+                        </tbody>
+                        <% const otherEntries = reportEntries.entries.filter(entry => !entry.type); %>
+                            <tbody>
+                                <%- include('./reportRowPartial', {entries: otherEntries, includeBudget}); %>
+                            </tbody>
+                            <%  if (reportEntries.totalEntry) {%>
+                                <% const totalEntries = [reportEntries.totalEntry]; %>
+                                    <tbody class="bold-row">
+                                        <%- include('./reportRowPartial', {entries: totalEntries, includeBudget}); %>
+                                            <%  } %>
+                                    </tbody>
+            </table>
+            <% } %>
