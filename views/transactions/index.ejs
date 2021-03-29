@@ -85,10 +85,48 @@
                     <%=`${t.amount}`%>
                 </td>
                 <td>
-                    <%=`${helpers.parseDate(t.clearingDate)}`%>
+                    <% if (t.clearingDate) { %>
+                        <%=`${helpers.parseDate(t.clearingDate)}`%>
+                            <% } else { %>
+                                <form onsubmit="setClearingDate(event);">
+                                    <button type="submit" class="btn-link" name="transaction" value=<%=JSON.stringify(t).replace(/\s/g, "%20")%>><i class="bi bi-calendar-check"></i></button>
+                                </form>
+                                <% } %>
                 </td>
                 <td><a href="/transactions/<%= t.id %>/edit"><i class="bi bi-pencil-square"></i></a></td>
             </tr>
             <% }%>
     </table>
+    <div class="form-group row" style="max-width:600px">
+        <label for="clearingDate" class="col-sm-3 col-form-label"><i class="bi bi-calendar-check" style="color:blue"></i> Clearing Date:</label>
+        <div class="col-sm-5">
+            <input type="date" class="form-control" id="clearingDate" value="2021-03-29">
+        </div>
+    </div>
     <a href="/transactions/new" class="btn btn-primary">New transaction</a>
+
+    <script>
+        function setClearingDate(e) {
+            e.preventDefault();
+            const t = JSON.parse(unescape(e.target.transaction.value));
+            const id = t._id;
+            const reqBody = {
+                transaction: {
+                    accountId: t.accountId,
+                    date: t.date,
+                    category: t.category,
+                    company: t.company,
+                    description: t.description,
+                    amount: t.amount,
+                    clearingDate: document.getElementById("clearingDate").value
+                }
+            };
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", `/transactions/${id}?_method=PATCH`);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify(reqBody));
+            location.reload();
+        }
+    </script>
