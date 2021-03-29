@@ -34,6 +34,9 @@ mongoose.connect('mongodb://localhost:27017/budgetData', { useNewUrlParser: true
         console.log(err)
     })
 
+app.get("/", (req, res) => {
+    res.render('home/index', {});
+})
 app.use('/transactions', transactionsRoutes);
 app.use('/reports', reportsRoutes);
 app.use('/budget', budgetRoutes);
