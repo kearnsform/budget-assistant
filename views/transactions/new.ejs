@@ -3,9 +3,9 @@
     <h1 class="display-4">Create a new transaction</h1>
     <form class="form-border validated-form" action="/transactions" method="post" novalidate>
         <div class="form-group row">
-            <label for="accountId" class="col-sm-3 col-form-label">AccountId:</label>
+            <label for="account" class="col-sm-3 col-form-label">Account:</label>
             <div class="col-sm-5">
-                <input type="number" class="form-control" id="accountId" name="transaction[accountId]" required>
+                <input type="text" class="form-control" id="account" name="transaction[account]" required>
             </div>
         </div>
         <div class="form-group row">

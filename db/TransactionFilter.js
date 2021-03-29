@@ -10,8 +10,8 @@ class TransactionFilter {
             filterOptions = { accountId: 1, startDate: new Date().minusMonths(1).firstOfMonth() }; //default filter
         }
 
-        if (filterOptions.accountId) {
-            this.accountId = filterOptions.accountId;
+        if (filterOptions.account) {
+            this.account = filterOptions.account;
         }
 
         if (filterOptions.startDate) {

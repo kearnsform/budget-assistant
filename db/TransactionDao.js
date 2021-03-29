@@ -3,8 +3,8 @@ const TransactionArray = require('../db/TransactionArray');
 
 async function getTransactions(filter) {
     const mongoFilter = {};
-    if (filter.accountId) {
-        mongoFilter.accountId = filter.accountId;
+    if (filter.account) {
+        mongoFilter.account = filter.account;
     }
     if (filter.startDate && filter.endDate) {
         mongoFilter.date = { $gte: filter.startDate, $lte: filter.endDate };

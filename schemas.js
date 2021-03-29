@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 module.exports.transactionSchema = Joi.object({
     transaction: Joi.object({
-        accountId: Joi.number().integer().required(),
+        account: Joi.string().required(),
         date: Joi.date().required(),
         category: Joi.string().required(),
         company: Joi.string().optional().allow(''),

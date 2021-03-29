@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const budgetDao = require('../db/BudgetDao');
 
 const transactionSchema = new mongoose.Schema({
-    accountId: {
-        type: Number,
+    account: {
+        type: String,
         required: true
     },
     date: {

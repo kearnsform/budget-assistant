@@ -3,7 +3,7 @@ const ReportBuilder = require('./ReportBuilder');
 class AccountReportBuilder extends ReportBuilder {
 
     async addDefaultEntries(accounts) {
-        this.report.entries.push({ key: 1, amount: 0 });
+        this.report.entries.push({ key: 'US Bank', amount: 0 });
     }
 
 }

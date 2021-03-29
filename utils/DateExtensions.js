@@ -14,13 +14,13 @@ Date.prototype.firstOfMonth = function() {
 }
 
 Date.prototype.firstOfYear = function() {
-    this.setMonth(1);
+    this.setMonth(0);
     this.setDate(1);
     return this;
 }
 
 Date.prototype.lastOfYear = function() {
-    this.setMonth(12);
+    this.setMonth(11);
     this.setDate(31);
     return this;
 }
