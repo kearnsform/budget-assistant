@@ -1,6 +1,7 @@
 const path = require('path');
 const methodOverride = require('method-override')
 const express = require('express');
+const favicon = require('serve-favicon')
 const app = express();
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
@@ -10,6 +11,8 @@ const cookieParser = require('cookie-parser');
 const transactionsRoutes = require('./routes/transactionsRoutes');
 const reportsRoutes = require('./routes/reportsRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
+
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 app.use(cookieParser());
 
