@@ -23,7 +23,7 @@ const transactionSchema = new mongoose.Schema({
     company: {
         type: String
     },
-    description: {
+    notes: {
         type: String
     },
     amount: {

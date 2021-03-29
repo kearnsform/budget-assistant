@@ -34,8 +34,8 @@ class TransactionFilter {
             this.categories = filterOptions.categories;
         }
 
-        if (filterOptions.description) {
-            this.description = filterOptions.description;
+        if (filterOptions.notes) {
+            this.notes = filterOptions.notes;
         }
 
     }

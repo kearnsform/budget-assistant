@@ -13,8 +13,8 @@ async function getTransactions(filter) {
     } else if (filter.endDate) {
         mongoFilter.date = { $lte: filter.endDate };
     }
-    if (filter.description) {
-        mongoFilter.description = new RegExp(filter.description);
+    if (filter.notes) {
+        mongoFilter.description = new RegExp(filter.notes);
     }
     if (filter.categories) {
         mongoFilter.category = { $in: filter.categories };
