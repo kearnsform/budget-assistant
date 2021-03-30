@@ -1,0 +1,16 @@
+<% layout('layouts/boilerplate')%>
+
+    <h1 class="display-4">Create a new account</h1>
+
+    <form class="form-border validated-form" action="/accounts" method="post" novalidate>
+        <div class="form-group row">
+            <label for="name" class="col-sm-3 col-form-label">Name:</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="name" name="account[name]" required>
+            </div>
+        </div>
+        <button class="btn btn-success">Save</button>
+    </form>
+
+    <br>
+    <a href="/accounts">Go Back</a>

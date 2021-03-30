@@ -5,7 +5,11 @@
         <div class="form-group row">
             <label for="account" class="col-sm-3 col-form-label">Account:</label>
             <div class="col-sm-5">
-                <input type="text" class="form-control" id="account" name="transaction[account]" required>
+                <select name="transaction[account]" id="account">
+                    <% for(let account of accounts){ %>
+                    <option class="form-control" value="<%=account%>"><%=account%></option>
+                    <% } %>
+                </select>
             </div>
         </div>
         <div class="form-group row">

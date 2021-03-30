@@ -8,6 +8,7 @@ const { transactionSchema } = require('./../schemas.js');
 const transactionDao = require('../db/TransactionDao');
 const TransactionFilter = require('../db/TransactionFilter');
 const budgetDao = require('../db/BudgetDao');
+const Account = require('../models/account');
 
 const validateTransaction = (req, res, next) => {
     const { error } = transactionSchema.validate(req.body);
@@ -25,12 +26,14 @@ router.get('/', catchAsync(async(req, res) => {
     res.cookie('filter', filter, { expires: expiration, httpOnly: true });
     const transactions = await transactionDao.getTransactions(filter);
     const categories = await budgetDao.getCategories();
-    res.render('transactions/index', { helpers: functions, transactions: transactions.get(), filter: filter, categories });
+    const accounts = (await Account.find({})).map((account) => { return account.name; });
+    res.render('transactions/index', { helpers: functions, transactions: transactions.get(), filter: filter, categories, accounts });
 }))
 
 router.get('/new', catchAsync(async(req, res) => {
     const categories = await budgetDao.getCategories();
-    res.render('transactions/new', { categories });
+    const accounts = (await Account.find({})).map((account) => { return account.name; })
+    res.render('transactions/new', { categories, accounts });
 }))
 
 router.post('/', validateTransaction, catchAsync(async(req, res) => {
@@ -43,7 +46,8 @@ router.get('/:id/edit', catchAsync(async(req, res) => {
     const { id } = req.params;
     const transaction = await Transaction.findById(id);
     const categories = await budgetDao.getCategories();
-    res.render('transactions/edit', { helpers: functions, transaction, categories });
+    const accounts = (await Account.find({})).map((account) => { return account.name; })
+    res.render('transactions/edit', { helpers: functions, transaction, categories, accounts });
 }))
 
 router.patch('/:id', validateTransaction, catchAsync(async(req, res) => {

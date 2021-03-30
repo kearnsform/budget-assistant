@@ -10,7 +10,12 @@ class ReportBuilder {
 
     addAmounts(groupings) {
         for (let grouping of groupings) {
-            this.report.entries.find(entry => { return entry.key === grouping.key }).amount = grouping.amount;
+            const entry = this.report.entries.find(entry => { return entry.key === grouping.key });
+            if (entry) {
+                entry.amount = grouping.amount;
+            } else {
+                this.report.entries.push({ key: grouping.key, amount: grouping.amount });
+            }
         }
     }
 

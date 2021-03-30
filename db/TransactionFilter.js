@@ -7,11 +7,11 @@ class TransactionFilter {
             filterOptions = req.cookies.filter;
         }
         if (!filterOptions) {
-            filterOptions = { accountId: 1, startDate: new Date().minusMonths(1).firstOfMonth() }; //default filter
+            filterOptions = { startDate: new Date().minusMonths(1).firstOfMonth() }; //default filter
         }
 
-        if (filterOptions.account) {
-            this.account = filterOptions.account;
+        if (filterOptions.accounts) {
+            this.accounts = filterOptions.accounts;
         }
 
         if (filterOptions.startDate) {

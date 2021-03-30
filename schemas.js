@@ -19,3 +19,9 @@ module.exports.budgetItemSchema = Joi.object({
         amount: Joi.number().required()
     }).required()
 });
+
+module.exports.accountSchema = Joi.object({
+    account: Joi.object({
+        name: Joi.string().required()
+    }).required()
+});

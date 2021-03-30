@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const transactionsRoutes = require('./routes/transactionsRoutes');
 const reportsRoutes = require('./routes/reportsRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
+const accountRoutes = require('./routes/accountRoutes');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
@@ -43,6 +44,7 @@ app.get("/", (req, res) => {
 app.use('/transactions', transactionsRoutes);
 app.use('/reports', reportsRoutes);
 app.use('/budget', budgetRoutes);
+app.use('/accounts', accountRoutes);
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))

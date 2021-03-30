@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
 const budgetDao = require('../db/BudgetDao');
+const Account = require('../models/account');
 
 const transactionSchema = new mongoose.Schema({
     account: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: async function(value) {
+                return (await Account.find({})).map((account) => { return account.name; }).includes(value);
+            },
+            message: props => `${props.value} is not valid`
+        }
     },
     date: {
         type: Date,
