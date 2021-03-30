@@ -40,9 +40,29 @@ form {
     font-size: inherit;
 }
 
-.table td {
-    max-width: 250px;
+.table td,
+.table th {
+    /* max-width: 250px; */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.table-scroll {
+    height: 400px;
+    display: block;
+}
+
+.tbody-scroll {
+    overflow-y: scroll;
+    height: 360px;
+    width: 80%;
+    position: absolute;
+    display: block;
+}
+
+.thead-scroll {
+    width: 99%;
+    position: relative;
+    display: block;
 }
