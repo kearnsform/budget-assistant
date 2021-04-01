@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
-const BudgetItem = require('../models/budgetItem');
 const ExpressError = require('../utils/ExpressError');
 const { budgetItemSchema } = require('./../schemas.js');
-const budgetDao = require('../db/BudgetDao');
-const categoryDao = require('../db/CategoryDao');
+const budget = require('../controllers/budget');
 
 
 const validateBudgetItem = (req, res, next) => {
@@ -18,38 +16,17 @@ const validateBudgetItem = (req, res, next) => {
     }
 }
 
-router.get('/', catchAsync(async(req, res) => {
-    const budget = await budgetDao.getBudget();
-    res.render('budget/index', { budget });
-}));
+router.route('/')
+    .get(catchAsync(budget.index))
+    .post(validateBudgetItem, catchAsync(budget.createNewBudgetItem));
 
-router.get('/new', catchAsync(async(req, res) => {
-    const categories = (await categoryDao.getCategories(true)).map((category) => { return category.name });
-    res.render('budget/new', { categories });
-}))
+router.get('/new', catchAsync(budget.renderNewForm));
 
-router.post('/', validateBudgetItem, catchAsync(async(req, res) => {
-    const budgetItem = new BudgetItem(req.body.budgetItem);
-    await budgetItem.save();
-    res.redirect('/budget');
-}))
+router.get('/:id/edit', catchAsync(budget.renderEditForm));
 
-router.get('/:id/edit', catchAsync(async(req, res) => {
-    const { id } = req.params;
-    const budgetItem = await BudgetItem.findById(id);
-    res.render('budget/edit', { budgetItem });
-}))
+router.route('/:id')
+    .patch(validateBudgetItem, catchAsync(budget.updateBudgetItem))
+    .delete(catchAsync(budget.deleteBudgetItem));
 
-router.patch('/:id', validateBudgetItem, catchAsync(async(req, res) => {
-    const { id } = req.params;
-    await BudgetItem.findByIdAndUpdate(id, req.body.budgetItem, { runValidators: true, new: true });
-    res.redirect('/budget');
-}))
-
-router.delete('/:id', catchAsync(async(req, res) => {
-    const { id } = req.params;
-    await BudgetItem.findByIdAndDelete(id);
-    res.redirect('/budget');
-}))
 
 module.exports = router;

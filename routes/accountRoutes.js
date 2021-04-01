@@ -3,7 +3,7 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { accountSchema } = require('./../schemas.js');
-const Account = require('../models/account');
+const accounts = require('../controllers/accounts');
 
 const validateAccount = (req, res, next) => {
     const { error } = accountSchema.validate(req.body);
@@ -15,26 +15,12 @@ const validateAccount = (req, res, next) => {
     }
 }
 
-router.get('/new', (req, res) => {
-    res.render('accounts/new', {});
-})
+router.get('/new', accounts.renderNewForm);
 
-router.post('/', validateAccount, catchAsync(async(req, res) => {
-    const account = new Account(req.body.account);
-    await account.save();
-    res.redirect('/setup');
-}))
+router.post('/', validateAccount, catchAsync(accounts.createNewAccount));
 
-router.get('/:id/edit', catchAsync(async(req, res) => {
-    const { id } = req.params;
-    const account = await Account.findById(id);
-    res.render('accounts/edit', { account });
-}))
+router.get('/:id/edit', catchAsync(accounts.renderEditForm));
 
-router.patch('/:id', validateAccount, catchAsync(async(req, res) => {
-    const { id } = req.params;
-    await Account.findByIdAndUpdate(id, req.body.account, { runValidators: true, new: true });
-    res.redirect('/setup');
-}))
+router.patch('/:id', validateAccount, catchAsync(accounts.updateAccount));
 
 module.exports = router;
