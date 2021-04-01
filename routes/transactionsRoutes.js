@@ -45,7 +45,10 @@ router.post('/', validateTransaction, catchAsync(async(req, res) => {
 router.get('/:id/edit', catchAsync(async(req, res) => {
     const { id } = req.params;
     const transaction = await Transaction.findById(id);
-    const categories = (await categoryDao.getCategories()).map((category) => { return category.name });
+    const categories = (await categoryDao.getCategories(true)).map((category) => { return category.name });
+    if (!categories.includes(transaction.category)) {
+        categories.push(transaction.category);
+    }
     const accounts = (await Account.find({})).map((account) => { return account.name; })
     res.render('transactions/edit', { helpers: functions, transaction, categories, accounts });
 }))

@@ -2,6 +2,9 @@
     <tr>
         <td>
             <%=entry.key%>
+                <% if (entry.active === false) { %>
+                    <i class="bi bi-exclamation-triangle-fill exclaim"></i>
+                    <% }  %>
         </td>
         <td <%=entry.alert ? 'class=alert' : '' %>>
             <%  if (entry.type !== 'expense' && entry.amount < 0) {%>

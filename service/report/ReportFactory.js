@@ -12,7 +12,7 @@ class ReportFactory {
     async build() {
         let reportBuilder = {};
         if (this.config.groupingColumn === 'category') {
-            const categories = await categoryDao.getCategories();
+            const categories = (await categoryDao.getCategories()).map(ct => { return { name: ct.name, type: ct.type, active: ct.active } });
             reportBuilder = new CategoryReportBuilder(categories);
         } else {
             reportBuilder = new AccountReportBuilder();

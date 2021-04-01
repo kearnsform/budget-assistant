@@ -60,3 +60,7 @@ Date.prototype.lastOfMonth = function() {
     this.setDate(date);
     return this;
 }
+
+Date.prototype.toIso = function() {
+    return new Date(this.toISOString().split('T')[0] + 'T00:00:00.000Z');
+}

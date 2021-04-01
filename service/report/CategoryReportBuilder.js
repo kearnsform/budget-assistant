@@ -9,26 +9,25 @@ class CategoryReportBuilder extends ReportBuilder {
     }
 
     async addDefaultEntries(selectedCategories) {
-        let reportCategories = this.categories;
+        let reportCategories = this.categories.filter(ct => ct.active === true);
         if (selectedCategories) {
             reportCategories = this.categories.filter(ct => selectedCategories.includes(ct.name));
         }
         for (let ct of reportCategories) {
-            this.report.entries.push({ key: ct.name, amount: 0, type: ct.type });
+            this.report.entries.push({ key: ct.name, amount: 0, type: ct.type, active: ct.active });
         }
     }
 
     async addBudgetColumn(monthsSpan) {
-        const signedAmount = function(entry, type) {
-            let multiplier = type === 'expense' ? -1 : 1;
+        const signedAmount = function(entry) {
+            let multiplier = entry.category.type === 'expense' ? -1 : 1;
             return multiplier * (entry.amount || 0);
         }
         const budget = await budgetDao.getBudget();
         for (let entry of this.report.entries) {
             const budgetEntry = budget.lookup(entry.key);
             if (budgetEntry) {
-                const type = this.categories.find(ct => ct.name === budgetEntry.category).type;
-                entry.budgetAmount = signedAmount(budgetEntry, type) * monthsSpan;
+                entry.budgetAmount = signedAmount(budgetEntry) * monthsSpan;
             }
         }
     }

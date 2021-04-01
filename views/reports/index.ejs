@@ -27,23 +27,29 @@
                             <% } %>
                     </tr>
                 </thead>
-                <% const incomeEntries = reportEntries.entries.filter(entry => entry.type && entry.type === 'income'); %>
-                    <tbody>
-                        <%- include('./reportRowPartial', {entries: incomeEntries, includeBudget}); %>
-                    </tbody>
-                    <% const expenseEntries = reportEntries.entries.filter(entry => entry.type && entry.type === 'expense'); %>
-                        <tbody class="expense">
-                            <%- include('./reportRowPartial', {entries: expenseEntries, includeBudget}); %>
+                <% const inactiveGroup = reportEntries.entries.reduce((acc, entry) => {return acc || entry.active === false;}, false) %>
+                    <% const incomeEntries = reportEntries.entries.filter(entry => entry.type && entry.type === 'income'); %>
+                        <tbody>
+                            <%- include('./reportRowPartial', {entries: incomeEntries, includeBudget}); %>
                         </tbody>
-                        <% const otherEntries = reportEntries.entries.filter(entry => !entry.type); %>
-                            <tbody>
-                                <%- include('./reportRowPartial', {entries: otherEntries, includeBudget}); %>
+                        <% const expenseEntries = reportEntries.entries.filter(entry => entry.type && entry.type === 'expense'); %>
+                            <tbody class="expense">
+                                <%- include('./reportRowPartial', {entries: expenseEntries, includeBudget}); %>
                             </tbody>
-                            <%  if (reportEntries.totalEntry) {%>
-                                <% const totalEntries = [reportEntries.totalEntry]; %>
-                                    <tbody class="bold-row">
-                                        <%- include('./reportRowPartial', {entries: totalEntries, includeBudget}); %>
-                                            <%  } %>
-                                    </tbody>
+                            <% const otherEntries = reportEntries.entries.filter(entry => !entry.type); %>
+                                <tbody>
+                                    <%- include('./reportRowPartial', {entries: otherEntries, includeBudget}); %>
+                                </tbody>
+                                <%  if (reportEntries.totalEntry) {%>
+                                    <% const totalEntries = [reportEntries.totalEntry]; %>
+                                        <tbody class="bold-row">
+                                            <%- include('./reportRowPartial', {entries: totalEntries, includeBudget}); %>
+                                                <%  } %>
+                                        </tbody>
             </table>
+            <h5 class="display-6">
+                <% if (inactiveGroup === true) { %>
+                    <i class="bi bi-exclamation-triangle-fill exclaim"></i> Inactive group!
+                    <% } %>
+            </h5>
             <% } %>

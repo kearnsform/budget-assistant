@@ -7,11 +7,11 @@ async function getTransactions(filter) {
         mongoFilter.account = { $in: filter.accounts };
     }
     if (filter.startDate && filter.endDate) {
-        mongoFilter.date = { $gte: filter.startDate, $lte: filter.endDate };
+        mongoFilter.date = { $gte: filter.startDate.toIso(), $lte: filter.endDate.toIso() };
     } else if (filter.startDate) {
-        mongoFilter.date = { $gte: filter.startDate };
+        mongoFilter.date = { $gte: filter.startDate.toIso() };
     } else if (filter.endDate) {
-        mongoFilter.date = { $lte: filter.endDate };
+        mongoFilter.date = { $lte: filter.endDate.toIso() };
     }
     if (filter.notes) {
         mongoFilter.notes = new RegExp(filter.notes);

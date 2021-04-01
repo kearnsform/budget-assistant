@@ -24,7 +24,7 @@ router.get('/', catchAsync(async(req, res) => {
 }));
 
 router.get('/new', catchAsync(async(req, res) => {
-    const categories = (await categoryDao.getCategories()).map((category) => { return category.name });
+    const categories = (await categoryDao.getCategories(true)).map((category) => { return category.name });
     res.render('budget/new', { categories });
 }))
 

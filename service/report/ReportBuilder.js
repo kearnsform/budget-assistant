@@ -14,7 +14,7 @@ class ReportBuilder {
             if (entry) {
                 entry.amount = grouping.amount;
             } else {
-                this.report.entries.push({ key: grouping.key, amount: grouping.amount });
+                this.report.entries.push({ key: grouping.key, amount: grouping.amount, active: false });
             }
         }
     }
