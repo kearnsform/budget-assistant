@@ -15,11 +15,6 @@ const validateAccount = (req, res, next) => {
     }
 }
 
-router.get('/', catchAsync(async(req, res) => {
-    const accounts = await Account.find({});
-    res.render('accounts/index', { accounts });
-}));
-
 router.get('/new', (req, res) => {
     res.render('accounts/new', {});
 })
@@ -27,7 +22,7 @@ router.get('/new', (req, res) => {
 router.post('/', validateAccount, catchAsync(async(req, res) => {
     const account = new Account(req.body.account);
     await account.save();
-    res.redirect('/accounts');
+    res.redirect('/setup');
 }))
 
 router.get('/:id/edit', catchAsync(async(req, res) => {
@@ -39,7 +34,7 @@ router.get('/:id/edit', catchAsync(async(req, res) => {
 router.patch('/:id', validateAccount, catchAsync(async(req, res) => {
     const { id } = req.params;
     await Account.findByIdAndUpdate(id, req.body.account, { runValidators: true, new: true });
-    res.redirect('/accounts');
+    res.redirect('/setup');
 }))
 
 module.exports = router;

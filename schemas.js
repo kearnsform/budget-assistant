@@ -14,7 +14,6 @@ module.exports.transactionSchema = Joi.object({
 
 module.exports.budgetItemSchema = Joi.object({
     budgetItem: Joi.object({
-        type: Joi.string().required(),
         category: Joi.string().required(),
         amount: Joi.number().required()
     }).required()
@@ -23,5 +22,13 @@ module.exports.budgetItemSchema = Joi.object({
 module.exports.accountSchema = Joi.object({
     account: Joi.object({
         name: Joi.string().required()
+    }).required()
+});
+
+module.exports.categorySchema = Joi.object({
+    category: Joi.object({
+        name: Joi.string().required(),
+        type: Joi.string().required(),
+        active: Joi.boolean()
     }).required()
 });

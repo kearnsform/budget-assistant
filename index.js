@@ -12,6 +12,8 @@ const transactionsRoutes = require('./routes/transactionsRoutes');
 const reportsRoutes = require('./routes/reportsRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 const accountRoutes = require('./routes/accountRoutes');
+const categoriesRoutes = require('./routes/categoriesRoutes');
+const setupRoutes = require('./routes/setupRoutes');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
@@ -45,6 +47,8 @@ app.use('/transactions', transactionsRoutes);
 app.use('/reports', reportsRoutes);
 app.use('/budget', budgetRoutes);
 app.use('/accounts', accountRoutes);
+app.use('/categories', categoriesRoutes);
+app.use('/setup', setupRoutes);
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))

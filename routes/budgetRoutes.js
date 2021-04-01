@@ -5,6 +5,7 @@ const BudgetItem = require('../models/budgetItem');
 const ExpressError = require('../utils/ExpressError');
 const { budgetItemSchema } = require('./../schemas.js');
 const budgetDao = require('../db/BudgetDao');
+const categoryDao = require('../db/CategoryDao');
 
 
 const validateBudgetItem = (req, res, next) => {
@@ -22,9 +23,10 @@ router.get('/', catchAsync(async(req, res) => {
     res.render('budget/index', { budget });
 }));
 
-router.get('/new', (req, res) => {
-    res.render('budget/new', {});
-})
+router.get('/new', catchAsync(async(req, res) => {
+    const categories = (await categoryDao.getCategories()).map((category) => { return category.name });
+    res.render('budget/new', { categories });
+}))
 
 router.post('/', validateBudgetItem, catchAsync(async(req, res) => {
     const budgetItem = new BudgetItem(req.body.budgetItem);
@@ -41,6 +43,12 @@ router.get('/:id/edit', catchAsync(async(req, res) => {
 router.patch('/:id', validateBudgetItem, catchAsync(async(req, res) => {
     const { id } = req.params;
     await BudgetItem.findByIdAndUpdate(id, req.body.budgetItem, { runValidators: true, new: true });
+    res.redirect('/budget');
+}))
+
+router.delete('/:id', catchAsync(async(req, res) => {
+    const { id } = req.params;
+    await BudgetItem.findByIdAndDelete(id);
     res.redirect('/budget');
 }))
 

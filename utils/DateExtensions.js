@@ -1,6 +1,16 @@
 Date.prototype.minusMonths = function(n) {
+    let origDate = this.getDate();
+    this.setDate(15);
     this.setMonth(this.getMonth() - n);
-    return this;
+    const month = this.getMonth();
+
+    let dateToReturn = new Date(this.getYear() + 1900, month, 15);
+    if (origDate === 31 || (month === 1 && origDate > 28)) {
+        dateToReturn = dateToReturn.lastOfMonth();
+    } else {
+        dateToReturn.setDate(origDate);
+    }
+    return dateToReturn;
 }
 
 Date.prototype.minusYears = function(n) {

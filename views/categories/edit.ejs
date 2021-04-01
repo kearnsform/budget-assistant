@@ -1,0 +1,31 @@
+<% layout('layouts/boilerplate')%>
+
+    <h1 class="display-4">Edit Category</h1>
+    <form class="form-border validated-form" method="POST" action="/categories/<%=category.id%>?_method=PATCH" novalidate>
+        <br>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="name" name="category[name]" value="<%= category.name %>" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="type" class="col-sm-2 col-form-label">Type:</label>
+            <div class="col-sm-5">
+                <select name="category[type]" id="type" style="margin-left:0em; margin-top: 10px;">
+                <option  class="form-control" value="income" <%= category.type === 'income' ? 'selected': '' %>>Income</option>
+                <option  class="form-control" value="expense" <%= category.type === 'expense' ? 'selected': '' %>>Expense</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="active">Active:</label>
+            <div>
+                <input class="form-check-input" style="margin-left:1em; margin-top: 15px;" type="checkbox" id="active" name="category[active]" value="true" <%=category.active ? 'checked' : '' %>>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-success">Save</button>
+    </form>
+    <br>
+    <a href="/setup">Go Back</a>

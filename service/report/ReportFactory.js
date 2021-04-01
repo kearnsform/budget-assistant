@@ -1,5 +1,6 @@
 const AccountReportBuilder = require('./AccountReportBuilder');
 const CategoryReportBuilder = require('./CategoryReportBuilder');
+const categoryDao = require('../../db/CategoryDao');
 
 class ReportFactory {
     constructor(groupings, query, filter) {
@@ -9,7 +10,13 @@ class ReportFactory {
     }
 
     async build() {
-        const reportBuilder = this.config.groupingColumn === 'category' ? new CategoryReportBuilder() : new AccountReportBuilder();
+        let reportBuilder = {};
+        if (this.config.groupingColumn === 'category') {
+            const categories = await categoryDao.getCategories();
+            reportBuilder = new CategoryReportBuilder(categories);
+        } else {
+            reportBuilder = new AccountReportBuilder();
+        }
         await reportBuilder.addDefaultEntries(this.filter.categories);
         reportBuilder.addAmounts(this.groupings);
         if (this.config.includeBudget) {

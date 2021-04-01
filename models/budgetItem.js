@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
+const categoryDao = require('../db/CategoryDao');
 
 const budgetItemSchema = new mongoose.Schema({
-    type: {
-        type: String,
-        enum: ['income', 'expense'],
-        required: true
-    },
     category: {
         type: String,
+        unique: true,
         required: true,
-        immutable: true
+        validate: {
+            validator: async function(value) {
+                return (await categoryDao.getCategories()).map((category) => { return category.name }).includes(value);
+            },
+            message: props => `${props.value} is not valid`
+        }
     },
     amount: {
         type: Number,

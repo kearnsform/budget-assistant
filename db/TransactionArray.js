@@ -1,4 +1,4 @@
-const budgetDao = require('../db/BudgetDao');
+const categoryDao = require('../db/CategoryDao');
 
 class TransactionArray {
     constructor(array) {
@@ -10,14 +10,14 @@ class TransactionArray {
     }
 
     async groupBy(groupingColumn) {
-        let budgetItems = (await budgetDao.getBudget()).flatten();
+        const categories = await categoryDao.getCategories();
         let grouping = this.transactions.reduce((acc, t) => {
             let entry = acc.find(({ key }) => key === t[groupingColumn]);
             if (entry === undefined) {
                 entry = { key: t[groupingColumn], amount: 0 };
                 acc.push(entry);
             }
-            const type = budgetItems.find(({ category }) => category === t.category).type;
+            const type = categories.find(ct => ct.name === t.category).type;
             entry.amount += (type === 'income' ? t.amount : -t.amount);
             return acc;
         }, []);

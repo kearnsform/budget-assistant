@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const budgetDao = require('../db/BudgetDao');
+const categoryDao = require('../db/CategoryDao');
 const Account = require('../models/account');
 
 const transactionSchema = new mongoose.Schema({
@@ -22,7 +22,7 @@ const transactionSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: async function(value) {
-                return (await budgetDao.getCategories()).includes(value);
+                return (await categoryDao.getCategories()).map((category) => { return category.name }).includes(value);
             },
             message: props => `${props.value} is not valid`
         }
