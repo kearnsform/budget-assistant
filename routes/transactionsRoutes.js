@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { transactionSchema } = require('./../schemas.js');
 const transactions = require('../controllers/transactions');
+const { isLoggedIn } = require('../middleware');
 
 const validateTransaction = (req, res, next) => {
     const { error } = transactionSchema.validate(req.body);
@@ -16,15 +17,15 @@ const validateTransaction = (req, res, next) => {
 }
 
 router.route('/')
-    .get(catchAsync(transactions.index))
-    .post(validateTransaction, catchAsync(transactions.createTransaction));
+    .get(isLoggedIn, catchAsync(transactions.index))
+    .post(isLoggedIn, validateTransaction, catchAsync(transactions.createTransaction));
 
-router.get('/new', catchAsync(transactions.renderNewForm));
+router.get('/new', isLoggedIn, catchAsync(transactions.renderNewForm));
 
-router.get('/:id/edit', catchAsync(transactions.renderEditForm));
+router.get('/:id/edit', isLoggedIn, catchAsync(transactions.renderEditForm));
 
 router.route('/:id')
-    .patch(validateTransaction, catchAsync(transactions.updateTransaction))
-    .delete(catchAsync(transactions.deleteTransaction));
+    .patch(isLoggedIn, validateTransaction, catchAsync(transactions.updateTransaction))
+    .delete(isLoggedIn, catchAsync(transactions.deleteTransaction));
 
 module.exports = router;

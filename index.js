@@ -5,9 +5,15 @@ const favicon = require('serve-favicon')
 const app = express();
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
+const session = require('express-session');
+const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
+const userRoutes = require('./routes/userRoutes');
 const transactionsRoutes = require('./routes/transactionsRoutes');
 const reportsRoutes = require('./routes/reportsRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
@@ -40,9 +46,38 @@ mongoose.connect('mongodb://localhost:27017/budgetData', { useNewUrlParser: true
         console.log(err)
     })
 
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig))
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    console.log(req.session)
+    res.locals.currentUser = req.user;
+    next();
+})
+
 app.get("/", (req, res) => {
     res.render('home/index', {});
 })
+app.use('/users', userRoutes);
 app.use('/transactions', transactionsRoutes);
 app.use('/reports', reportsRoutes);
 app.use('/budget', budgetRoutes);

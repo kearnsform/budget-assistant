@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { accountSchema } = require('./../schemas.js');
 const accounts = require('../controllers/accounts');
+const { isLoggedIn } = require('../middleware');
 
 const validateAccount = (req, res, next) => {
     const { error } = accountSchema.validate(req.body);
@@ -15,12 +16,12 @@ const validateAccount = (req, res, next) => {
     }
 }
 
-router.get('/new', accounts.renderNewForm);
+router.get('/new', isLoggedIn, accounts.renderNewForm);
 
-router.post('/', validateAccount, catchAsync(accounts.createNewAccount));
+router.post('/', isLoggedIn, validateAccount, catchAsync(accounts.createNewAccount));
 
-router.get('/:id/edit', catchAsync(accounts.renderEditForm));
+router.get('/:id/edit', isLoggedIn, catchAsync(accounts.renderEditForm));
 
-router.patch('/:id', validateAccount, catchAsync(accounts.updateAccount));
+router.patch('/:id', isLoggedIn, validateAccount, catchAsync(accounts.updateAccount));
 
 module.exports = router;
