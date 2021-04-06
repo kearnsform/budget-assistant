@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const path = require('path');
 const methodOverride = require('method-override')
 const express = require('express');
@@ -92,7 +96,8 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
-    res.status(statusCode).render('error', { err })
+    console.error(err);
+    res.status(statusCode).render('error', { errorMessage: err.message })
 })
 
 app.listen(3000, () => {
