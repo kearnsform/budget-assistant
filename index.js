@@ -10,6 +10,7 @@ const app = express();
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const MongoDBStore = require("connect-mongo");
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const cookieParser = require('cookie-parser');
@@ -46,7 +47,8 @@ app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
-mongoose.connect('mongodb://localhost:27017/budgetData', { useNewUrlParser: true, useUnifiedTopology: true })
+const dbUrl = process.env.DB_URL;
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MONGO CONNECTION OPEN!!!")
     })
@@ -55,9 +57,19 @@ mongoose.connect('mongodb://localhost:27017/budgetData', { useNewUrlParser: true
         console.log(err)
     })
 
+const secret = process.env.SECRET;
+const store = MongoDBStore.create({
+    mongoUrl: dbUrl,
+    secret,
+    touchAfter: 24 * 60 * 60
+});
+store.on("error", function(e) {
+    console.log("SESSION STORE ERROR", e)
+})
 const sessionConfig = {
+    store,
     name: 'budget-session',
-    secret: 'thisshouldbeabettersecret!',
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -140,6 +152,7 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { errorMessage: err.message })
 })
 
-app.listen(3000, () => {
-    console.log("ON PORT 3000!")
+const port = process.env.PORT;
+app.listen(port, () => {
+    console.log(`ON PORT ${port}`)
 })
